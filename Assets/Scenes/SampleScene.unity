@@ -577,10 +577,10 @@ MonoBehaviour:
   StartSpawnPoint: {x: 0, y: 0}
   OffsetY: 5
   OffsetX: 5
-  BlockPrefab2: {fileID: -697948242924813557, guid: b6c581b0d1cd9474e9a8453e40234074, type: 3}
+  BlockPrefab2: {fileID: 7574856907257489013, guid: d2b2a106e4618e24ca7f19c0db64cb94, type: 3}
   AngleStep: 30
   StartRadius: 1
-  NumberOfSpiralBlocks: 0
+  NumberOfSpiralBlocks: 20
   RadiusStep: 0.7
   StartSpiralPosition: {x: 0, y: 0}
   BlockPrefab3: {fileID: 7574856907257489013, guid: d2b2a106e4618e24ca7f19c0db64cb94, type: 3}
@@ -1023,7 +1023,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1840453680
 Transform:
   m_ObjectHideFlags: 0

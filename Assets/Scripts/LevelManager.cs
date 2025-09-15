@@ -34,17 +34,17 @@ public class LevelManager : MonoBehaviour
             BlockSpawner.SpawnCircleBlocks, BlockSpawner.SpawnGridBlocks, BlockSpawner.SpawnSpiralBlocks
         };
 
-        int blockBehaviourIndex, spawneBehaviourIndex;
+        int blockBehaviourIndex, spawnerBehaviourIndex;
 
         do
         {
-            blockBehaviourIndex = Random.Range(0, 2);
-            spawneBehaviourIndex = Random.Range(0, 2);
+            blockBehaviourIndex = Random.Range(0, 3);
+            spawnerBehaviourIndex = Random.Range(0, 3);
         }
-        while (_usedCombinations.Contains((blockBehaviourIndex, spawneBehaviourIndex)));
-        _usedCombinations.Add((blockBehaviourIndex, spawneBehaviourIndex));
+        while (_usedCombinations.Contains((blockBehaviourIndex, spawnerBehaviourIndex)));
+        _usedCombinations.Add((blockBehaviourIndex, spawnerBehaviourIndex));
 
         //blockBehaviour[blockBehaviourIndex]();
-        spawnBehaviour[spawneBehaviourIndex]();
+        spawnBehaviour[spawnerBehaviourIndex]();
     }
 }

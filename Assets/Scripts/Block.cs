@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +10,7 @@ public class Block : MonoBehaviour
     private SpriteRenderer _renderer;
     private int _blockHP = 3;
     private int _cubeIndex;
+    private int _randomIndex;
     [SerializeField, Range(10, 100)]private float _rotationSpeed;
 
     private void Awake()
@@ -20,7 +20,10 @@ public class Block : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
 
         _cubeIndex = transform.GetSiblingIndex();
-        if(_cubeIndex % 2 == 0)
+        _cubeIndex = transform.GetSiblingIndex(); 
+        
+        _randomIndex = Random.Range(0, 3);
+        if (_cubeIndex % 2 == 0)
         {
             _rotationSpeed *= 1;
         }
@@ -33,9 +36,8 @@ public class Block : MonoBehaviour
    private void OnCollisionEnter2D(Collision2D collision)
    {
         if (collision.gameObject.TryGetComponent<Ball>(out var ball))
-        {
-            int levelIndex = SceneManager.GetActiveScene().buildIndex;
-            switch (levelIndex)
+        {           
+            switch (_randomIndex)
             {
                 case 0:
                     Behaviour_1();
@@ -97,8 +99,8 @@ public class Block : MonoBehaviour
     }
     public void Behaviour_3()
     { 
-        Vector3 midSize = Vector3.one * 2.5f;
-        Vector3 minSize = Vector3.one * 1f;
+        Vector3 midSize = Vector3.one * 0.7f;
+        Vector3 minSize = Vector3.one * 0.3f;
 
          IEnumerator ReduceBlock(Vector3 targetScale, float reduceSpeed)
          {

@@ -26,22 +26,8 @@ public class BlockSpawner : MonoBehaviour
     public float CircleRadius;
     public Vector2 StartCirclePosition;
 
-    private void Start()
-    {
-        SpawnSpiralBlocks();
-    }
+    
 
-    public void SpawnGridBlocks()
-    {
-        for (int colomn = 0; colomn < Colomns; colomn++)
-        {
-            for (int row = 0; row < Rows; row++)
-            {
-                Vector3 spawnPosition = StartSpawnPoint + new Vector2(colomn * OffsetX, row * OffsetY); 
-                Instantiate(BlockPrefab1, spawnPosition, Quaternion.identity);
-            }
-        }
-    }
     public void SpawnSpiralBlocks()
     {
         float currentAngle = 0;
@@ -57,6 +43,18 @@ public class BlockSpawner : MonoBehaviour
             currentRadius += RadiusStep;
         }
     }
+
+    public void SpawnGridBlocks()
+    {
+        for (int colomn = 0; colomn < Colomns; colomn++)
+        {
+            for (int row = 0; row < Rows; row++)
+            {
+                Vector3 spawnPosition = StartSpawnPoint + new Vector2(colomn * OffsetX, row * OffsetY); 
+                Instantiate(BlockPrefab1, spawnPosition, Quaternion.identity);
+            }
+        }
+    }    
     
     public void SpawnCircleBlocks()
     {
