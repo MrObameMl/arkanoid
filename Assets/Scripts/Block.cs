@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Block : MonoBehaviour
 {
@@ -26,14 +27,29 @@ public class Block : MonoBehaviour
         else
         {
             _rotationSpeed *= -1;
-        }
+        }        
     }
 
    private void OnCollisionEnter2D(Collision2D collision)
    {
         if (collision.gameObject.TryGetComponent<Ball>(out var ball))
         {
-            Behaviour_4();            
+            int levelIndex = SceneManager.GetActiveScene().buildIndex;
+            switch (levelIndex)
+            {
+                case 0:
+                    Behaviour_1();
+                    break;
+                case 1:
+                    Behaviour_2();
+                    break;
+                case 2:
+                    Behaviour_3();
+                    break;
+                default:
+                    Debug.LogWarning("Behaviours not found, attention!!!");
+                    break;
+            }
         }
    }
 
@@ -42,7 +58,7 @@ public class Block : MonoBehaviour
        // transform.Rotate(new Vector3(0, 0, _rotationSpeed * Time.deltaTime));  
     }
 
-    private void Behaviour_1()
+    public void Behaviour_1()
     {
         //смена цвета и падения 
 
@@ -61,7 +77,7 @@ public class Block : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    private void Behaviour_2()
+    public void Behaviour_2()
     {
         //уменьшение блока
 
@@ -79,7 +95,7 @@ public class Block : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    private void Behaviour_3()
+    public void Behaviour_3()
     { 
         Vector3 midSize = Vector3.one * 2.5f;
         Vector3 minSize = Vector3.one * 1f;

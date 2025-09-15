@@ -16,16 +16,22 @@ public class BlockSpawner : MonoBehaviour
     public Block BlockPrefab2;
     public float AngleStep;
     public float StartRadius;
-    public float NumberOfBlocks;
+    public float NumberOfSpiralBlocks;
     public float RadiusStep;
-    public Vector2 StartPosition;
+    public Vector2 StartSpiralPosition;
+    [Space(10)]
+    [Header("----------Circle Spawner----------")]
+    public Block BlockPrefab3;
+    public int NumberOfCircleBlocks;
+    public float CircleRadius;
+    public Vector2 StartCirclePosition;
 
-    private void Awake()
+    private void Start()
     {
         SpawnSpiralBlocks();
     }
 
-    private void SpawnGridBlocks()
+    public void SpawnGridBlocks()
     {
         for (int colomn = 0; colomn < Colomns; colomn++)
         {
@@ -36,19 +42,33 @@ public class BlockSpawner : MonoBehaviour
             }
         }
     }
-    private void SpawnSpiralBlocks()
+    public void SpawnSpiralBlocks()
     {
         float currentAngle = 0;
         float currentRadius = StartRadius;
-        for (int block = 0; block < NumberOfBlocks; block++)
+        for (int block = 0; block < NumberOfSpiralBlocks; block++)
         {
             float angleRad = currentAngle * Mathf.Deg2Rad;
             float x = currentRadius * Mathf.Cos(angleRad);
             float y = currentRadius * Mathf.Sin(angleRad);
-            Vector2 spawnPosition = StartPosition + new Vector2(x, y);
+            Vector2 spawnPosition = StartSpiralPosition + new Vector2(x, y);
             Instantiate(BlockPrefab2, spawnPosition, Quaternion.identity);
             currentAngle += AngleStep;
             currentRadius += RadiusStep;
         }
+    }
+    
+    public void SpawnCircleBlocks()
+    {
+        for (int block = 0; block <NumberOfCircleBlocks; block++)
+        {
+            float angle = 360 / NumberOfCircleBlocks;
+            float angleRad = angle * block * Mathf.Deg2Rad;
+            float x = CircleRadius * Mathf.Cos(angleRad);
+            float y = CircleRadius * Mathf.Sin(angleRad);
+            Vector2 spawnPosition = StartCirclePosition + new Vector2(x, y);
+            Instantiate(BlockPrefab3, spawnPosition, Quaternion.identity);
+        }
+
     }
 }

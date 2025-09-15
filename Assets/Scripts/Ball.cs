@@ -69,10 +69,16 @@ public class Ball : MonoBehaviour
     {
         if (collision.CompareTag("RespawnBorder"))
         {
-            transform.position = _startBallPosition;
-            Platform.transform.position = _startPlatformPosition;
-            _rigidbody.velocity = Vector2.zero;
-            _ballOnPlatform = true;
+            StartCoroutine(ReturnDelay());
+            
+            IEnumerator ReturnDelay()
+            {
+                yield return new WaitForSeconds(1f);
+                _rigidbody.velocity = Vector2.zero;
+                _ballOnPlatform = true;
+                transform.position = _startBallPosition;
+                Platform.transform.position = _startPlatformPosition;
+            }
         }        
     }
 
