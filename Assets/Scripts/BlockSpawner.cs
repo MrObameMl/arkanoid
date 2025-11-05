@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class BlockSpawner : MonoBehaviour
 {
+    public Block[] BlockPrefabs;
+
     [Header(" ----------Grid Spawner----------")]
-    public Block BlockPrefab1;
     public int Colomns;
     public int Rows;
     public Vector2 StartSpawnPoint;
@@ -13,60 +14,88 @@ public class BlockSpawner : MonoBehaviour
     [Range(1, 10)]public int OffsetX;
     [Space(10)]
     [Header(" ----------Spiral Spawner----------")]
-    public Block BlockPrefab2;
     public float AngleStep;
-    public float StartRadius;
+    public float StartRadiusX;
+    public float StartRadiusY;
     public float NumberOfSpiralBlocks;
-    public float RadiusStep;
+    public float RadiusStepX;
+    public float RadiusStepY;
     public Vector2 StartSpiralPosition;
     [Space(10)]
     [Header("----------Circle Spawner----------")]
-    public Block BlockPrefab3;
     public int NumberOfCircleBlocks;
     public float CircleRadius;
-    public Vector2 StartCirclePosition;
+    public Vector2 StartCirclePosition1;
+    public Vector2 StartCirclePosition2;
+    public Vector2 StartCirclePosition3;
 
-    
+    private List<Block> _blocksCount = new List<Block>();
+    private GameManager _gameManager;
+
+    private void Awake()
+    {
+        _gameManager = FindAnyObjectByType<GameManager>();
+    }
 
     public void SpawnSpiralBlocks()
     {
         float currentAngle = 0;
-        float currentRadius = StartRadius;
+        float currentRadiusX = StartRadiusX;
+        float currentRadiusY = StartRadiusY;
+        Block blockPrefab = BlockPrefabs[Random.Range(0, BlockPrefabs.Length)];
         for (int block = 0; block < NumberOfSpiralBlocks; block++)
         {
             float angleRad = currentAngle * Mathf.Deg2Rad;
-            float x = currentRadius * Mathf.Cos(angleRad);
-            float y = currentRadius * Mathf.Sin(angleRad);
+            float x = currentRadiusX * Mathf.Cos(angleRad);
+            float y = currentRadiusY * Mathf.Sin(angleRad);
             Vector2 spawnPosition = StartSpiralPosition + new Vector2(x, y);
-            Instantiate(BlockPrefab2, spawnPosition, Quaternion.identity);
+            var blockInstance = Instantiate(blockPrefab, spawnPosition, Quaternion.identity);
             currentAngle += AngleStep;
-            currentRadius += RadiusStep;
+            currentRadiusX += RadiusStepX;
+            currentRadiusY += RadiusStepY;
+
+            _blocksCount.Add(blockInstance);
+            _gameManager.SetBlocks(_blocksCount);
         }
     }
 
     public void SpawnGridBlocks()
     {
+        Block blockPrefab = BlockPrefabs[Random.Range(0, BlockPrefabs.Length)];
         for (int colomn = 0; colomn < Colomns; colomn++)
         {
             for (int row = 0; row < Rows; row++)
             {
                 Vector3 spawnPosition = StartSpawnPoint + new Vector2(colomn * OffsetX, row * OffsetY); 
-                Instantiate(BlockPrefab1, spawnPosition, Quaternion.identity);
+                var blockInstance = Instantiate(blockPrefab, spawnPosition, Quaternion.identity);
+
+                _blocksCount.Add(blockInstance);
+                _gameManager.SetBlocks(_blocksCount);
             }
         }
     }    
     
     public void SpawnCircleBlocks()
     {
-        for (int block = 0; block <NumberOfCircleBlocks; block++)
-        {
-            float angle = 360 / NumberOfCircleBlocks;
-            float angleRad = angle * block * Mathf.Deg2Rad;
-            float x = CircleRadius * Mathf.Cos(angleRad);
-            float y = CircleRadius * Mathf.Sin(angleRad);
-            Vector2 spawnPosition = StartCirclePosition + new Vector2(x, y);
-            Instantiate(BlockPrefab3, spawnPosition, Quaternion.identity);
+        Block blockPrefab = BlockPrefabs[Random.Range(0, BlockPrefabs.Length)];
+        void Spawn(Vector3 position)
+        {            
+            for (int block = 0; block < NumberOfCircleBlocks; block++)
+            {
+                float angle = 360 / NumberOfCircleBlocks;
+                float angleRad = angle * block * Mathf.Deg2Rad;
+                float x = CircleRadius * Mathf.Cos(angleRad);
+                float y = CircleRadius * Mathf.Sin(angleRad);
+                Vector2 spawnPosition = position + new Vector3(x, y);
+                var blockInstance = Instantiate(blockPrefab, spawnPosition, Quaternion.identity);
+
+                _blocksCount.Add(blockInstance);
+                _gameManager.SetBlocks(_blocksCount);
+            }
         }
 
+        Spawn(StartCirclePosition1);
+        Spawn(StartCirclePosition2);
+        Spawn(StartCirclePosition3);
     }
 }

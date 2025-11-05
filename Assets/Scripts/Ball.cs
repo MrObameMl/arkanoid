@@ -1,17 +1,21 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Ball : MonoBehaviour
 {
+    public static event Action OnBallFalledDown;
     public float JumpForce;
     public Platform Platform;
 
     private bool _ballOnPlatform = true;
+    private bool _launch = true;
+
     private Rigidbody2D _rigidbody;
     private Vector3 _reflectedDirection;
     private Vector3 _startBallPosition;
-    private Vector3 _startPlatformPosition;
+    private Vector3 _startPlatformPosition;    
 
     private void Awake()
     {
@@ -20,6 +24,8 @@ public class Ball : MonoBehaviour
         _startBallPosition = transform.position;
 
         _startPlatformPosition = Platform.transform.position;
+
+        UIManager.OnAttemptsEnded += StopBall;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -38,29 +44,49 @@ public class Ball : MonoBehaviour
     private void Update()
     {
         LaunchBall();
+
+        if (_rigidbody.linearVelocity.magnitude < JumpForce - 0.5f)
+        {
+            _rigidbody.linearVelocity = _reflectedDirection;
+        }
+
+        if (_rigidbody.IsSleeping() && !_ballOnPlatform && _launch)
+        {
+            StartCoroutine(StartBallRepeatly());
+        }
+    }
+
+    private IEnumerator StartBallRepeatly()
+    {
+        _launch = false;
+        yield return new WaitForSeconds(0.5f);        
+        _rigidbody.linearVelocity = Random.insideUnitCircle * JumpForce;
+
+        yield return new WaitForSeconds(0.5f);
+        _launch = true;
     }
 
     private void FixedUpdate()
     {
-        _reflectedDirection = _rigidbody.velocity;
+        _reflectedDirection = _rigidbody.linearVelocity;
     }
 
     private void FixedBallDirection()
     {
         float minYvelocity = 1;
-        Vector3 ballYvelocity = _rigidbody.velocity;
+        Vector3 ballYvelocity = _rigidbody.linearVelocity;
         if (Mathf.Abs(ballYvelocity.y) < minYvelocity)
         {
             ballYvelocity.y = ballYvelocity.y > 0 ? minYvelocity : -minYvelocity;
-            _rigidbody.velocity = ballYvelocity.normalized * JumpForce;
+            _rigidbody.linearVelocity = ballYvelocity.normalized * JumpForce;
         }
 
         float minXvelocity = 1;
-        Vector3 ballXvelocity = _rigidbody.velocity;
+        Vector3 ballXvelocity = _rigidbody.linearVelocity;
         if (Mathf.Abs(ballXvelocity.x) < minXvelocity)
         {
             ballXvelocity.x = ballXvelocity.x > 0 ? minXvelocity : -minXvelocity;
-            _rigidbody.velocity = ballXvelocity.normalized * JumpForce;
+            _rigidbody.linearVelocity = ballXvelocity.normalized * JumpForce;
         }
 
     }
@@ -69,12 +95,13 @@ public class Ball : MonoBehaviour
     {
         if (collision.CompareTag("RespawnBorder"))
         {
+            OnBallFalledDown?.Invoke();
             StartCoroutine(ReturnDelay());
             
             IEnumerator ReturnDelay()
             {
                 yield return new WaitForSeconds(1f);
-                _rigidbody.velocity = Vector2.zero;
+                _rigidbody.linearVelocity = Vector2.zero;
                 _ballOnPlatform = true;
                 transform.position = _startBallPosition;
                 Platform.transform.position = _startPlatformPosition;
@@ -87,7 +114,7 @@ public class Ball : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && _ballOnPlatform)
         {
             //_rigidbody.velocity = (Vector2.up + new Vector2(Random.Range(-1, 1), 0)).normalized * JumpForce;
-            _rigidbody.velocity = Vector2.up * JumpForce;
+            _rigidbody.linearVelocity = Vector2.up * JumpForce;
             _ballOnPlatform = false;
         }
 
@@ -100,7 +127,7 @@ public class Ball : MonoBehaviour
     private void HandleCollision(Collision2D collision)
     {
         Vector2 collisionPoint = collision.contacts[0].normal;
-        _rigidbody.velocity = Vector2.Reflect(_reflectedDirection, collisionPoint).normalized * JumpForce;
+        _rigidbody.linearVelocity = Vector2.Reflect(_reflectedDirection, collisionPoint).normalized * JumpForce;
     }
 
     private void ChangeColorCollisionObjects(Collision2D collision)
@@ -116,15 +143,28 @@ public class Ball : MonoBehaviour
     {
         Vector3 savedDirection = _reflectedDirection;
         yield return new WaitForSeconds(0.5f);
-        if (_rigidbody.velocity == Vector2.zero)
+        if (_rigidbody.linearVelocity == Vector2.zero)
         {
-            _rigidbody.velocity = savedDirection.normalized * JumpForce;
+            _rigidbody.linearVelocity = savedDirection.normalized * JumpForce;
         }
+    }
+
+    private void StopBall()
+    {
+        _rigidbody.linearVelocity = Vector2.zero;
+        JumpForce = 0;
+        transform.position = _startBallPosition;
+
+    }
+
+    private void OnDestroy()
+    {
+        UIManager.OnAttemptsEnded -= StopBall;
     }
 }
 
 /* 
- логические союзы - это инструменты которые позволяют добавить несколько условий и сделать их проверку. Главная особенность заключается в том, что при использовании логического союза и все условия должны быть true. А при использования логического союза или одно тз условий должно быть true.  
-и - &&
-или - ||
+ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ true. пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ true.  
+пїЅ - &&
+пїЅпїЅпїЅ - ||
  */
