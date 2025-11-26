@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7773994777241495898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3736938442796127465}
+  - component: {fileID: 1439512040400106958}
+  m_Layer: 0
+  m_Name: BlockSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3736938442796127465
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773994777241495898}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1439512040400106958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773994777241495898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e62abd440aee6a348ad33bb74f92d4e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlockPrefabs:
+  - {fileID: 7574856907257489013, guid: d2b2a106e4618e24ca7f19c0db64cb94, type: 3}
+  - {fileID: 7574856907257489013, guid: 243447941c45c2a4cbb4798af0035905, type: 3}
+  - {fileID: 7574856907257489013, guid: f20ed39fbbe925d44895cdb339ab9777, type: 3}
+  Colomns: 2
+  Rows: 1
+  StartSpawnPoint: {x: -18, y: 0}
+  OffsetY: 5
+  OffsetX: 5
+  AngleStep: 30
+  StartRadiusX: 3
+  StartRadiusY: 1
+  NumberOfSpiralBlocks: 15
+  RadiusStepX: 0.8
+  RadiusStepY: 0.4
+  StartSpiralPosition: {x: 0, y: 3}
+  NumberOfCircleBlocks: 20
+  CircleRadius: 5
+  StartCirclePosition1: {x: 0, y: 5}
+  StartCirclePosition2: {x: -15, y: 2}
+  StartCirclePosition3: {x: 15, y: 2}

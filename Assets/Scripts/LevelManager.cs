@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour
 
     private static int _blockBehaviourIndex;
 
-    private void Start()
+    private void OnEnable()
     {
         float min = 20f / 255f;
         float max = 50f / 255f;

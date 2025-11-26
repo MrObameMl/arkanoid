@@ -9,10 +9,14 @@ public class GameManager : MonoBehaviour
 
     private List<Block> _blocksCount;
 
+    private void Start()
+    {
+        StartCoroutine(CheckBlocksCount());
+    }
+
     public void SetBlocks(List<Block> blocks)
     {
         _blocksCount = blocks;
-        StartCoroutine(CheckBlocksCount());
         OnBlocksCountUpdated?.Invoke(_blocksCount.Count);
     }
 
@@ -27,17 +31,13 @@ public class GameManager : MonoBehaviour
                     _blocksCount.RemoveAt(i);
                     OnBlocksCountUpdated?.Invoke(_blocksCount.Count);
                 }
-            }          
+            }
+            yield return null;
 
         }
-        yield return null;
-        Debug.Log("END After Coroutine");
-        Debug.Log("END After Coroutine   X2");
-        Debug.Log("END After While");
+
         if (_blocksCount.Count == 0)
         {
-            Debug.Log(_blocksCount.Count);
-            Debug.Log("END");
 
         }
     }
